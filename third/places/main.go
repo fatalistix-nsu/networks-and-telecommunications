@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"places/filescanner"
 	"places/httpserver"
 	"places/search"
 	"places/search/graphhopper"
 	"places/search/opentripmap"
 	"places/search/openweather"
-
-	"golang.org/x/crypto/acme/autocert"
 )
 
 func getSiteFiles() ([]string, error) {
@@ -31,11 +30,20 @@ func getSiteFiles() ([]string, error) {
 }
 
 func main() {
-	g := graphhopper.NewGraphHopper("your-key")
-	t := opentripmap.NewOpenTripMap("your-key")
-	w := openweather.NewOpenWeather("your-key")
+	// insert your keys for that services
+	// it should work using command line arguments, but now it doesn't
+	gKey := "your-key"
+	tKey := "your-key"
+	wKey := "your-key"
+
+	if gKey == "your-key" || tKey == "your-key" || wKey == "your-key" {
+		log.Println("WARN: possibly missing keys for apis (one of value is \"your-key\")")
+	}
+
+	g := graphhopper.NewGraphHopper(gKey)
+	t := opentripmap.NewOpenTripMap(tKey)
+	w := openweather.NewOpenWeather(wKey)
 	placer := search.NewPlacer(g, w, t)
-	domainName := "your-dns"
 	addons, err := getSiteFiles()
 	if err != nil {
 		log.Fatal(err)
@@ -49,14 +57,19 @@ func main() {
 	http.HandleFunc("/", httpServer.GetOnRoot)
 	http.HandleFunc("/ws", httpServer.WebSocket)
 
-	m := &autocert.Manager{
-		Cache:      autocert.DirCache("secret-dir"),
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist(domainName),
-	}
-	s := &http.Server{
-		Addr:      ":6969",
-		TLSConfig: m.TLSConfig(),
-	}
-	log.Fatal(s.ListenAndServeTLS("", ""))
+	// uncomment code below and set your domainName to enable HTTPS
+	// domainName := "your-dns"
+	// m := &autocert.Manager{
+	// 	Cache:      autocert.DirCache("secret-dir"),
+	// 	Prompt:     autocert.AcceptTOS,
+	// 	HostPolicy: autocert.HostWhitelist(domainName),
+	// }
+	// s := &http.Server{
+	// 	Addr:      ":6969",
+	// 	TLSConfig: m.TLSConfig(),
+	// }
+	// log.Fatal(s.ListenAndServeTLS("", ""))
+
+	// comment this line if you want to enable HTTPS
+	log.Fatal(http.ListenAndServe(":6969", nil))
 }
