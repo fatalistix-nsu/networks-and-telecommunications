@@ -1,10 +1,10 @@
-const domainName = "nsu-places.ddns.net"
+// for tls insert your own dns
+// const domainName = "your-dns"
+const domainName = "localhost"
 const webSocketListenURI = "/ws"
-export const ws = new WebSocket("wss://" + domainName + webSocketListenURI)
-
-// const domainName = "localhost:8069"
-// const webSocketListenURI = "/ws"
-// export const ws = new WebSocket("ws://" + domainName + webSocketListenURI)
+// only for TLS
+// export const ws = new WebSocket("wss://" + domainName + webSocketListenURI)
+export const ws = new WebSocket("ws://" + domainName + webSocketListenURI)
 
 export type ServerResponse = {
     code: number,
