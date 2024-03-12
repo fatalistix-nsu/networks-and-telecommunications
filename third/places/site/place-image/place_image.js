@@ -1,1 +1,0 @@
-//# sourceMappingURL=place_image.js.map
