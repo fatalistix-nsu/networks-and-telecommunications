@@ -4,11 +4,16 @@ import (
 	"fmt"
 	"log"
 	"runtime"
-	"socks5proxy/socks5proxy"
 	"time"
+
+	"socks5proxy/socks5proxy"
 )
 
 func main() {
+	fmt.Println("welcome to SOCKS-proxy")
+	fmt.Println("Implemented by ~v.balashov2@g.nsu.ru")
+	fmt.Println("<==================================>")
+	fmt.Print("Enter port: ")
 	var port uint16
 	_, err := fmt.Scanln(&port)
 	if err != nil {
