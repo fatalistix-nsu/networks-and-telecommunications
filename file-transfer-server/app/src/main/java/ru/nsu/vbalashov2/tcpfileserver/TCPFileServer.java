@@ -25,7 +25,7 @@ public class TCPFileServer {
     this.manager = manager;
   }
 
-  public void Listen(int port) throws IOException {
+  public void listen(int port) throws IOException {
     try {
       serverSocketChannel = ServerSocketChannel.open();
       serverSocketChannel.bind(new InetSocketAddress(port));
