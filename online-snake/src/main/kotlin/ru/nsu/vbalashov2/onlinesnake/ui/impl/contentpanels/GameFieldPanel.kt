@@ -43,7 +43,7 @@ class GameFieldPanel : JPanel() {
         g?.color = Color.WHITE
         g?.fillRect(offset.width, offset.height, fieldSizeDimension.width, fieldSizeDimension.height)
 
-        g?.color = Color(40, 40, 40)
+        g?.color = Color(100, 100, 100)
         for (i in 1..<fieldHeight) {
             g?.drawLine(
                 offset.width,
