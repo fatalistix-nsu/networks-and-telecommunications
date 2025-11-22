@@ -23,18 +23,28 @@ class ProtobufJavaMulticastUDPSuspendMessageSenderReader(
     private val niface: NetworkInterface
 
     init {
-//        val allNifaces = NetworkInterface.getNetworkInterfaces()!!
-////        val iter = NetworkInterface.getNetworkInterfaces()!!.iterator()
-////        while (iter.hasNext()) {
-////            println("ITERATOR NIFACE: ${iter.next().name}")
-////        }
-//        niface = allNifaces.toList().find { networkInterface ->
-//            !networkInterface.isLoopback && networkInterface.isUp && networkInterface.supportsMulticast()
-//        } ?: throw IOException("no interfaces found")
-//        allNifaces.toList().forEach { println("NIFACE: ${it.name}") }
-////        println(allNifaces.toList().size)
-//        println(niface.name)
-        niface = NetworkInterface.getByName("en0")
+        val allNifaces = NetworkInterface.getNetworkInterfaces()!!
+        niface = allNifaces.toList().find { networkInterface ->
+            if (networkInterface.isLoopback) {
+                return@find false
+            }
+
+            if (!networkInterface.isUp) {
+                return@find false
+            }
+
+            if (!networkInterface.supportsMulticast()) {
+                return@find false
+            }
+
+            if (!networkInterface.inetAddresses.asSequence().toList().any { it is Inet4Address }) {
+                return@find false
+            }
+
+            return@find true
+        } ?: throw IllegalStateException("no suitable interfaces found")
+
+        println("Selected interface ${niface.name}")
     }
 
     init {
